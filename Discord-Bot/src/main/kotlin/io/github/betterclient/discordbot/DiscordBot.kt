@@ -7,6 +7,7 @@ import io.github.betterclient.discordbot.register.RegistrationInfo
 import io.github.betterclient.discordbot.register.RegistrationInformations
 import io.github.betterclient.discordbot.util.getVar
 import kotlinx.serialization.json.Json
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
@@ -29,6 +30,7 @@ object DiscordBot {
     var MESSAGE_LISTENER: (String, List<File>) -> Unit = object : ((String, List<File>) -> Unit) {
         override fun invoke(p1: String, p2: List<File>) { println(p1) }
     }
+    var DELETE_ALL: Runnable = Runnable { }
 
     var SLACK_ID_VERIFIER: (String) -> Boolean = { false }
 
@@ -61,11 +63,29 @@ object DiscordBot {
 
         jda.addEventListener(ForceCheckListener)
 
+        var i = 0
         while (true) {
             //just run forever basically
             Thread.sleep(1 * 60 * 1000)
 
-            dosomething()
+            try {
+                dosomething()
+                i++
+
+                if (i == 6) {
+                    DELETE_ALL.run()
+                    i = 0
+                }
+            } catch (e: Throwable) {
+                jda.guilds[0].textChannels[0].sendMessageEmbeds(
+                    listOf(EmbedBuilder()
+                        .setTitle("Ran into an exception!")
+                        .setDescription(
+                            e.message
+                        )
+                        .build())
+                ).queue()
+            }
         }
     }
 

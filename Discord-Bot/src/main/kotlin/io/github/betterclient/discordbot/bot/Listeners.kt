@@ -18,6 +18,9 @@ object ForceCheckListener : ListenerAdapter() {
         } else if (content.startsWith("!DEBUG_TEST") && event.member!!.isOwner) {
             event.channel.sendMessage("Force reloading").queue()
             dosomething()
+        } else if (content == "!unsubscribe") {
+            DiscordBot.info.registered_users.remove(event.author.id)
+            event.channel.sendMessage("Removed you from logger").queue()
         }
     }
 }

@@ -20,6 +20,11 @@ object RegisterListener {
                 return
             }
 
+            if (DiscordBot.info.registered_users.containsKey(id)) {
+                channel.sendMessage("Already registered").queue()
+                return
+            }
+
             if (!DiscordBot.SLACK_ID_VERIFIER.invoke(id)) {
                 //fake id
                 channel.sendMessage("Wrong usage!\nCorrect usage: `!register_me @<slack_id>`").queue()

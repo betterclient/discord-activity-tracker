@@ -32,6 +32,7 @@ object SlackBot {
 
             usersProfileGet.isOk
         }
+        DiscordBot.DELETE_ALL = Runnable { RegistrationListener.deleteAllMessages() }
 
         RegistrationListener.deleteAllMessages() //delete as many messages as you can in start
     }
