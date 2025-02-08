@@ -15,7 +15,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import javax.imageio.ImageIO
 
-
 data class UserRichPresence(val id: String, val activity: RichPresence) {
     fun toFile(): File {
         val img = BufferedImage(500, 250, BufferedImage.TYPE_INT_ARGB)
@@ -68,7 +67,6 @@ data class UserRichPresence(val id: String, val activity: RichPresence) {
 
             g2d.drawString("Playing for $startReadable (probably wrong)", 20, 240)
         }
-
 
         g2d.dispose()
         return File.createTempFile("userstatus", ".png").also {

@@ -41,17 +41,20 @@ fun updateUser(member: Member) {
         member.activities
     }
 
-    println("${member.effectiveName} changed status!")
     val files: MutableList<File> = mutableListOf()
     for (activity1 in activity) {
         files += updateActivity(member, activity1)?: continue
     }
+    if (files.isEmpty()) return
 
+    println("${member.effectiveName} changed status!")
     DiscordBot.MESSAGE_LISTENER.invoke(
         "<@$s> just changed their rich presence!",
         files
     )
 }
+
+val beforeActivities = mutableMapOf<String, MutableList<RichPresence>>()
 
 fun updateActivity(member: Member, activity: Activity): File? {
     val presence = activity.asRichPresence()?.let {
@@ -59,7 +62,20 @@ fun updateActivity(member: Member, activity: Activity): File? {
     }
 
     if (presence != null) {
-        return presence.toFile()
+        val list = beforeActivities.computeIfAbsent(member.id) { mutableListOf() }
+        val richPresence = RichPresence(activity.name, activity.state, activity.asRichPresence()?.details)
+
+        if (!list.contains(richPresence)) {
+            list += richPresence
+            return presence.toFile()
+        }
+
+        list.find { a -> a.name == activity.name }?.let {
+            list -= it
+            list += richPresence
+        }
     }
     return null
 }
+
+data class RichPresence(val name: String, val state: String?, val details: String?)
