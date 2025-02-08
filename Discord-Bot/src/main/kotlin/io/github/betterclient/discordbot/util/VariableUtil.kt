@@ -9,3 +9,7 @@ fun getVar(name: String): String {
 fun String.ineedhelp(): String {
     return this[0].uppercase() + this.substring(1).lowercase()
 }
+
+fun File.createIfFake(): File {
+    return also { if (!it.exists()) it.createNewFile() }
+}

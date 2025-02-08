@@ -13,7 +13,7 @@ repositories {
 dependencies {
     implementation(project(":Slack-Bot"))
     implementation(project(":Discord-Bot"))
-    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("org.slf4j:slf4j-nop:2.0.16")
 }
 
 application {

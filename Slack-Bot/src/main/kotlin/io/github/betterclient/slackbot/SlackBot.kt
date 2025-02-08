@@ -54,6 +54,8 @@ object SlackBot {
             it.mrkdwn(true)
             it.text("$message $compiled")
         }
+
+        file.forEach { it.delete() }
     }
 
     fun shutdown() {

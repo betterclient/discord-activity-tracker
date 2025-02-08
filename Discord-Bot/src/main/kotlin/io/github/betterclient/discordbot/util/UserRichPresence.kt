@@ -69,7 +69,6 @@ data class UserRichPresence(val id: String, val activity: RichPresence) {
 
         g2d.dispose()
         return File.createTempFile("userstatus", ".png").also {
-            it.deleteOnExit()
             ImageIO.write(img, "png", it)
         }
     }

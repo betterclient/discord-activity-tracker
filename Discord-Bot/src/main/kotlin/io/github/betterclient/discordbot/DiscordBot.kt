@@ -6,6 +6,7 @@ import io.github.betterclient.discordbot.bot.dosomething
 import io.github.betterclient.discordbot.register.Listener
 import io.github.betterclient.discordbot.register.RegistrationInfo
 import io.github.betterclient.discordbot.register.RegistrationInformations
+import io.github.betterclient.discordbot.util.createIfFake
 import io.github.betterclient.discordbot.util.getVar
 import kotlinx.serialization.json.Json
 import net.dv8tion.jda.api.EmbedBuilder
@@ -70,14 +71,15 @@ object DiscordBot {
             Thread.sleep(1 * 60 * 1000)
 
             try {
-                dosomething()
-                i++
-
                 if (i == 6) {
                     DELETE_ALL.run()
                     beforeActivities.clear()
                     i = 0
                 }
+
+                dosomething()
+                i++
+
             } catch (e: Throwable) {
                 jda.guilds[0].textChannels[0].sendMessageEmbeds(
                     listOf(EmbedBuilder()
@@ -100,8 +102,4 @@ object DiscordBot {
 
         println("Stopped discord bot")
     }
-}
-
-private fun File.createIfFake(): File {
-    return also { if (!it.exists()) it.createNewFile() }
 }
