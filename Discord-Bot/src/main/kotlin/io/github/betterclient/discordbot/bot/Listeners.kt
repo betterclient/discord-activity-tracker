@@ -2,6 +2,7 @@ package io.github.betterclient.discordbot.bot
 
 import io.github.betterclient.discordbot.DiscordBot
 import io.github.betterclient.discordbot.register.RegisterListener.register
+import io.github.betterclient.discordbot.util.UserRichPresence
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent

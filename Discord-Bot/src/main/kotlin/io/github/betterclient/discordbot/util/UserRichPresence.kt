@@ -1,7 +1,6 @@
-package io.github.betterclient.discordbot.bot
+package io.github.betterclient.discordbot.util
 
 import io.github.betterclient.discordbot.DiscordBot
-import io.github.betterclient.discordbot.util.ineedhelp
 import net.dv8tion.jda.api.entities.RichPresence
 import java.awt.Color
 import java.awt.Font
@@ -24,9 +23,9 @@ data class UserRichPresence(val id: String, val activity: RichPresence) {
         g2d.fillRect(0, 0, 500, 250)
 
         g2d.color = Color.WHITE
-        g2d.font = Font("Arial", Font.BOLD, 30)
+        g2d.font = Font("Inter", Font.BOLD, 30)
         g2d.drawString(DiscordBot.jda.getUserById(id)!!.name, 20, 40)
-        g2d.font = Font("Arial", Font.PLAIN, 20)
+        g2d.font = Font("Inter", Font.PLAIN, 20)
 
         g2d.drawString("${activity.type.name.ineedhelp()} ${activity.name}", 20, 100)
         g2d.drawString(activity.details?: "N/A", 20, 135)
@@ -50,7 +49,7 @@ data class UserRichPresence(val id: String, val activity: RichPresence) {
             g2d.drawImage(ImageIO.read(url), 350, 0, 150, 150, null)
         }
 
-        g2d.font = Font("Comic Sans", Font.PLAIN, 20)
+        g2d.font = Font("Inter", Font.PLAIN, 20)
         g2d.color = Color.GREEN
         val timestamps = activity.timestamps
         if (timestamps != null) {
