@@ -1,6 +1,7 @@
 package io.github.betterclient.discordbot
 
 import io.github.betterclient.discordbot.bot.ForceCheckListener
+import io.github.betterclient.discordbot.bot.beforeActivities
 import io.github.betterclient.discordbot.bot.dosomething
 import io.github.betterclient.discordbot.register.Listener
 import io.github.betterclient.discordbot.register.RegistrationInfo
@@ -74,6 +75,7 @@ object DiscordBot {
 
                 if (i == 6) {
                     DELETE_ALL.run()
+                    beforeActivities.clear()
                     i = 0
                 }
             } catch (e: Throwable) {
