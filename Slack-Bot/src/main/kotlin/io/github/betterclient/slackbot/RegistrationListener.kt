@@ -186,7 +186,7 @@ object RegistrationListener : Listener {
         app.slack.methods().chatPostMessage {
             it.token(getVar("SLACK_BOT_TOKEN"))
             it.channel(CHANNEL_ID)
-            it.text("Go to [the discord server](https://discord.gg/Gbg8CSCgy6) to link your account!")
+            it.text("Go to <https://discord.gg/Gbg8CSCgy6| the discord server> to link your account!")
             it.mrkdwn(true)
         }
     }
