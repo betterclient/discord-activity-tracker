@@ -1,6 +1,7 @@
 package io.github.betterclient.slackbot
 
 import com.slack.api.methods.MethodsClient
+import com.slack.api.methods.response.chat.ChatPostMessageResponse
 import com.slack.api.model.block.ActionsBlock
 import com.slack.api.model.block.SectionBlock
 import com.slack.api.model.block.composition.MarkdownTextObject
@@ -24,13 +25,15 @@ object RegistrationListener : Listener {
     }
 
     private fun awaitResponse(
-        array: Array<String>,
+        array0: Pair<Array<String>, ChatPostMessageResponse>,
         methods: MethodsClient,
         info: RegistrationInfo,
         accept: Runnable,
         reject: Runnable,
         rejectBlock: Runnable
     ) {
+        val array = array0.first
+
         var hasResponse = false
         val arrayNew = Array<Pattern>(3) {
             when(it) {
@@ -45,11 +48,14 @@ object RegistrationListener : Listener {
             if (hasResponse) return@blockAction ctx.ack()
 
             if (ctx.requestUserId.uppercase() == info.id.uppercase()) {
-                methods.chatPostMessage {
+                methods.chatUpdate {
                     it.token(getVar("SLACK_BOT_TOKEN"))
                     it.channel(CHANNEL_ID)
-                    it.linkNames(true)
-                    it.text("Successfully registered!")
+                    it.ts(array0.second.ts) //ts(this) is tuff man
+                    it.text("Registered.")
+                    it.blocks(
+                        listOf(SectionBlock.builder().text(PlainTextObject("Registered.", false)).build())
+                    )
                 }
                 println("Registered user $info")
                 accept.run()
@@ -62,11 +68,14 @@ object RegistrationListener : Listener {
             if (hasResponse) return@blockAction ctx.ack()
 
             if (ctx.requestUserId.uppercase() == info.id.uppercase()) {
-                methods.chatPostMessage {
+                methods.chatUpdate {
                     it.token(getVar("SLACK_BOT_TOKEN"))
                     it.channel(CHANNEL_ID)
-                    it.linkNames(true)
+                    it.ts(array0.second.ts)
                     it.text("Rejected.")
+                    it.blocks(
+                        listOf(SectionBlock.builder().text(PlainTextObject("Rejected.", false)).build())
+                    )
                 }
                 println("Rejected user $info")
                 reject.run()
@@ -79,11 +88,14 @@ object RegistrationListener : Listener {
             if (hasResponse) return@blockAction ctx.ack()
 
             if (ctx.requestUserId.uppercase() == info.id.uppercase()) {
-                methods.chatPostMessage {
+                methods.chatUpdate {
                     it.token(getVar("SLACK_BOT_TOKEN"))
                     it.channel(CHANNEL_ID)
-                    it.linkNames(true)
-                    it.text("Blocked ${info.discordName} from sending future requests to you.")
+                    it.ts(array0.second.ts)
+                    it.text("Blocked.")
+                    it.blocks(
+                        listOf(SectionBlock.builder().text(PlainTextObject("Blocked.", false)).build())
+                    )
                 }
                 rejectBlock.run()
                 hasResponse = true
@@ -100,7 +112,7 @@ object RegistrationListener : Listener {
     private fun sendMessage(
         methods: MethodsClient,
         info: RegistrationInfo
-    ): Array<String> {
+    ): Pair<Array<String>, ChatPostMessageResponse> {
         val buttonIDS = Array(3) {
             return@Array when(it) {
                 0 -> "thats-me${System.currentTimeMillis()}-for${info.id}-${info.discordID}"
@@ -109,7 +121,7 @@ object RegistrationListener : Listener {
             }
         }
 
-        methods.chatPostMessage {
+        val chatPostMessage = methods.chatPostMessage {
             it.token(getVar("SLACK_BOT_TOKEN"))
             it.channel(CHANNEL_ID)
             it.linkNames(true)
@@ -147,7 +159,7 @@ object RegistrationListener : Listener {
             )
         }
 
-        return buttonIDS
+        return Pair(buttonIDS, chatPostMessage)
     }
 
     /**
