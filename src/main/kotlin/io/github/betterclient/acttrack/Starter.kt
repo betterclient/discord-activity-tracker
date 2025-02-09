@@ -4,10 +4,8 @@ import io.github.betterclient.discordbot.DiscordBot
 import io.github.betterclient.discordbot.util.createIfFake
 import io.github.betterclient.slackbot.SlackBot
 import java.io.File
-import java.io.FileWriter
 import java.io.PrintStream
 import java.lang.Thread
-import kotlin.system.exitProcess
 
 var writer = StringBuilder()
 
@@ -28,6 +26,16 @@ fun main() {
 
     ThreadWrapper("SlackBot") {
         SlackBot.start()
+    }.start()
+
+    ThreadWrapper("Log file re-setter") {
+        while(true) {
+            Thread.sleep(30 * 60 * 1000)
+
+            File("log@${System.currentTimeMillis()}.txt").createIfFake().writeBytes(writer.toString().toByteArray())
+            writer = StringBuilder()
+            System.gc()
+        }
     }.start()
 
     Runtime.getRuntime().addShutdownHook(Thread {

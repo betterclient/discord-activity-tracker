@@ -154,6 +154,8 @@ object RegistrationListener : Listener {
      * Nuke all bot messages
      */
     fun deleteAllMessages() {
+        System.gc()
+
         app.slack.methods().conversationsHistory {
             it.token(getVar("SLACK_BOT_TOKEN"))
             it.channel(CHANNEL_ID)
