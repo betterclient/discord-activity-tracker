@@ -181,5 +181,13 @@ object RegistrationListener : Listener {
                 }
             }
         }
+
+        Thread.sleep(2000)
+        app.slack.methods().chatPostMessage {
+            it.token(getVar("SLACK_BOT_TOKEN"))
+            it.channel(CHANNEL_ID)
+            it.text("Go to [the discord server](https://discord.gg/Gbg8CSCgy6) to link your account!")
+            it.mrkdwn(true)
+        }
     }
 }
