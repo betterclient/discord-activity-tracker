@@ -16,7 +16,9 @@ import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.PrintStream
 
 object DiscordBot {
     private lateinit var TOKEN: String
@@ -79,13 +81,16 @@ object DiscordBot {
 
                 dosomething()
                 i++
-
             } catch (e: Throwable) {
-                jda.guilds[0].textChannels[0].sendMessageEmbeds(
+                val baos = ByteArrayOutputStream()
+                e.printStackTrace(PrintStream(baos))
+                val mes = String(baos.toByteArray())
+
+                jda.guilds[0].getTextChannelById(1338131112492269670)?.sendMessageEmbeds(
                     listOf(EmbedBuilder()
                         .setTitle("Ran into an exception!")
                         .setDescription(
-                            e.message
+                            mes
                         )
                         .build())
                 ).queue()
