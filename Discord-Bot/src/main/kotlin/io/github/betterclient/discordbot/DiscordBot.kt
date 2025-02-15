@@ -93,7 +93,7 @@ object DiscordBot {
                             mes
                         )
                         .build())
-                ).queue()
+                )?.queue()
             }
         }
     }
